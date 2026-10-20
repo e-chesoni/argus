@@ -11,6 +11,9 @@ namespace Joystick
     int getX();
     int getY();
 
+    float getNormalizedX();
+    float getNormalizedY();
+
     bool isXCentered(int x);
     bool isYCentered(int y);
 }

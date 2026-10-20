@@ -11,7 +11,8 @@ namespace Motor
     };
 
     void setup();
-
+    
+    void setSpeed(MotorId motor, float speed);
     void forward(MotorId motor);
     void backward(MotorId motor);
     void stop(MotorId motor);

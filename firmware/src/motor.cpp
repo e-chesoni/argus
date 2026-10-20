@@ -59,6 +59,31 @@ void Motor::setup()
     digitalWrite(rearRightPins.in2, LOW);
 }
 
+void Motor::setSpeed(MotorId motor, float speed)
+{
+    MotorPins pins = getPins(motor);
+
+    speed = constrain(speed, -1.0f, 1.0f);
+
+    int duty = static_cast<int>(abs(speed) * 255);
+
+    if (speed > 0.0f)
+    {
+        analogWrite(pins.in1, duty);
+        digitalWrite(pins.in2, LOW);
+    }
+    else if (speed < 0.0f)
+    {
+        digitalWrite(pins.in1, LOW);
+        analogWrite(pins.in2, duty);
+    }
+    else
+    {
+        digitalWrite(pins.in1, LOW);
+        digitalWrite(pins.in2, LOW);
+    }
+}
+
 void Motor::forward(MotorId motor)
 {
     MotorPins pins = getPins(motor);
