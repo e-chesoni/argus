@@ -25,9 +25,9 @@ namespace
     MotorConfig motors[] =
     {
         {41, 40, 0, 1, DEFAULT_FREQ, 0.0f}, // Front-left
-        {39, 38, 2, 3, DEFAULT_FREQ, 0.0f}, // Front-right
-        {16, 15, 4, 5, DEFAULT_FREQ, 0.0f}, // Rear-left
-        {18, 17, 6, 7, DEFAULT_FREQ, 0.0f}  // Rear-right
+        {38, 37, 2, 3, DEFAULT_FREQ, 0.0f}, // Front-right
+        {17, 16, 4, 5, DEFAULT_FREQ, 0.0f}, // Rear-left
+        {8, 18, 6, 7, DEFAULT_FREQ, 0.0f}  // Rear-right
     };
 
     MotorConfig& getMotor(Motor::MotorId motor)

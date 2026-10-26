@@ -4,8 +4,8 @@
 
 namespace
 {
-    constexpr int xPin = 5;
-    constexpr int yPin = 6;
+    constexpr int xPin = 4;
+    constexpr int yPin = 5;
     
     float normalize(int value, int center)
     {
