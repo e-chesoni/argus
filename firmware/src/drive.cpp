@@ -30,96 +30,15 @@ void Drive::move(float x, float y)
     rearLeft   /= maxSpeed;
     rearRight  /= maxSpeed;
 
+    // Set desired motor speeds
     Motor::setSpeed(Id::frontLeft, frontLeft);
     Motor::setSpeed(Id::frontRight, frontRight);
     Motor::setSpeed(Id::rearLeft, rearLeft);
     Motor::setSpeed(Id::rearRight, rearRight);
-}
 
-void Drive::forward()
-{
-    Motor::forward(Id::frontLeft);
-    Motor::forward(Id::frontRight);
-    Motor::forward(Id::rearLeft);
-    Motor::forward(Id::rearRight);
-}
-
-void Drive::backward()
-{
-    Motor::backward(Id::frontLeft);
-    Motor::backward(Id::frontRight);
-    Motor::backward(Id::rearLeft);
-    Motor::backward(Id::rearRight);
-}
-
-void Drive::strafeLeft()
-{
-    Motor::backward(Id::frontLeft);
-    Motor::forward(Id::frontRight);
-    Motor::forward(Id::rearLeft);
-    Motor::backward(Id::rearRight);
-}
-
-void Drive::strafeRight()
-{
-    Motor::forward(Id::frontLeft);
-    Motor::backward(Id::frontRight);
-    Motor::backward(Id::rearLeft);
-    Motor::forward(Id::rearRight);
-}
-
-void Drive::rotateLeft()
-{
-    Motor::backward(Id::frontLeft);
-    Motor::forward(Id::frontRight);
-    Motor::backward(Id::rearLeft);
-    Motor::forward(Id::rearRight);
-}
-
-void Drive::rotateRight()
-{
-    Motor::forward(Id::frontLeft);
-    Motor::backward(Id::frontRight);
-    Motor::forward(Id::rearLeft);
-    Motor::backward(Id::rearRight);
-}
-
-void Drive::diagonalFrontLeft()
-{
-    Motor::stop(Id::frontLeft);
-    Motor::forward(Id::frontRight);
-    Motor::forward(Id::rearLeft);
-    Motor::stop(Id::rearRight);
-}
-
-void Drive::diagonalFrontRight()
-{
-    Motor::forward(Id::frontLeft);
-    Motor::stop(Id::frontRight);
-    Motor::stop(Id::rearLeft);
-    Motor::forward(Id::rearRight);
-}
-
-void Drive::diagonalBackLeft()
-{
-    Motor::backward(Id::frontLeft);
-    Motor::stop(Id::frontRight);
-    Motor::stop(Id::rearLeft);
-    Motor::backward(Id::rearRight);
-}
-
-void Drive::diagonalBackRight()
-{
-    Motor::stop(Id::frontLeft);
-    Motor::backward(Id::frontRight);
-    Motor::backward(Id::rearLeft);
-    Motor::stop(Id::rearRight);
-}
-
-void Drive::stop()
-{
-    Motor::stop(Id::frontLeft);
-    Motor::stop(Id::frontRight);
-    Motor::stop(Id::rearLeft);
-    Motor::stop(Id::rearRight);
+    // Apply PWM signals to motors
+    Motor::updateSignal(Id::frontLeft);
+    Motor::updateSignal(Id::frontRight);
+    Motor::updateSignal(Id::rearLeft);
+    Motor::updateSignal(Id::rearRight);
 }

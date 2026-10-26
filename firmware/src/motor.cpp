@@ -1,109 +1,154 @@
 #include <Arduino.h>
+#include <math.h>
 
 #include "../include/motor.hpp"
 
+// use anonymous namespace for "private" helper functions for motor class
 namespace
 {
-    struct MotorPins
+    constexpr uint32_t DEFAULT_FREQ = 20000;
+    constexpr uint8_t LEDC_RESOLUTION_BITS = 8;
+    constexpr uint32_t LEDC_RESOLUTION = (1 << LEDC_RESOLUTION_BITS) - 1;
+
+    struct MotorConfig
     {
-        int in1;
-        int in2;
+        int fwdPWMPin;
+        int backPWMPin;
+
+        uint8_t fwdChannel;
+        uint8_t backChannel;
+
+        uint32_t currentFreq;
+        float desiredSpeed;
     };
 
-    constexpr MotorPins frontLeftPins  = {41, 40};
-    constexpr MotorPins frontRightPins = {39, 38};
-    constexpr MotorPins rearLeftPins   = {16, 15};
-    constexpr MotorPins rearRightPins  = {18, 17};
-
-    MotorPins getPins(Motor::MotorId motor)
+    MotorConfig motors[] =
     {
-        switch (motor)
-        {
-            case Motor::MotorId::frontLeft:
-                return frontLeftPins;
+        {41, 40, 0, 1, DEFAULT_FREQ, 0.0f}, // Front-left
+        {39, 38, 2, 3, DEFAULT_FREQ, 0.0f}, // Front-right
+        {16, 15, 4, 5, DEFAULT_FREQ, 0.0f}, // Rear-left
+        {18, 17, 6, 7, DEFAULT_FREQ, 0.0f}  // Rear-right
+    };
 
-            case Motor::MotorId::frontRight:
-                return frontRightPins;
+    MotorConfig& getMotor(Motor::MotorId motor)
+    {
+        return motors[static_cast<int>(motor)];
+    }
 
-            case Motor::MotorId::rearLeft:
-                return rearLeftPins;
+    void ledcAnalogWrite(uint8_t channel, float speed)
+    {
+        speed = constrain(speed, 0.0f, 1.0f);
 
-            case Motor::MotorId::rearRight:
-                return rearRightPins;
-        }
+        uint32_t duty = static_cast<uint32_t>(
+            speed * LEDC_RESOLUTION
+        );
 
-        return { -1, -1 };
+        ledcWrite(channel, duty);
     }
 }
 
+// Configure motors
 void Motor::setup()
 {
-    // Configure the front-left motor control pins as outputs
-    pinMode(frontLeftPins.in1, OUTPUT);
-    pinMode(frontLeftPins.in2, OUTPUT);
-    pinMode(frontRightPins.in1, OUTPUT);
-    pinMode(frontRightPins.in2, OUTPUT);
-    pinMode(rearLeftPins.in1, OUTPUT);
-    pinMode(rearLeftPins.in2, OUTPUT);
-    pinMode(rearRightPins.in1, OUTPUT);
-    pinMode(rearRightPins.in2, OUTPUT);
+    for (MotorConfig& motor : motors)
+    {
+        ledcSetup(
+            motor.fwdChannel,
+            motor.currentFreq,
+            LEDC_RESOLUTION_BITS
+        );
 
-    // Start with the motor stopped
-    digitalWrite(frontLeftPins.in1, LOW);
-    digitalWrite(frontLeftPins.in2, LOW);
-    digitalWrite(frontRightPins.in1, LOW);
-    digitalWrite(frontRightPins.in2, LOW);
-    digitalWrite(rearLeftPins.in1, LOW);
-    digitalWrite(rearLeftPins.in2, LOW);
-    digitalWrite(rearRightPins.in1, LOW);
-    digitalWrite(rearRightPins.in2, LOW);
+        ledcSetup(
+            motor.backChannel,
+            motor.currentFreq,
+            LEDC_RESOLUTION_BITS
+        );
+
+        ledcAttachPin(motor.fwdPWMPin, motor.fwdChannel);
+        ledcAttachPin(motor.backPWMPin, motor.backChannel);
+
+        ledcWrite(motor.fwdChannel, 0);
+        ledcWrite(motor.backChannel, 0);
+    }
 }
 
+// Update PWM frequency
+void Motor::setFreq(MotorId motor, unsigned int freq)
+{
+    MotorConfig& config = getMotor(motor);
+
+    config.currentFreq = freq;
+
+    ledcSetup(
+        config.fwdChannel,
+        config.currentFreq,
+        LEDC_RESOLUTION_BITS
+    );
+
+    ledcSetup(
+        config.backChannel,
+        config.currentFreq,
+        LEDC_RESOLUTION_BITS
+    );
+}
+
+// Set desired motor speed
 void Motor::setSpeed(MotorId motor, float speed)
 {
-    MotorPins pins = getPins(motor);
+    MotorConfig& config = getMotor(motor);
 
-    speed = constrain(speed, -1.0f, 1.0f);
+    config.desiredSpeed = constrain(speed, -1.0f, 1.0f);
+}
 
-    int duty = static_cast<int>(abs(speed) * 255);
+// Apply PWM based on desired speed
+void Motor::setPWM(MotorId motor)
+{
+    MotorConfig& config = getMotor(motor);
 
-    if (speed > 0.0f)
+    if (config.desiredSpeed > 0.0f)
     {
-        analogWrite(pins.in1, duty);
-        digitalWrite(pins.in2, LOW);
+        ledcAnalogWrite(config.backChannel, 0.0f);
+        ledcAnalogWrite(config.fwdChannel, config.desiredSpeed);
     }
-    else if (speed < 0.0f)
+    else if (config.desiredSpeed < 0.0f)
     {
-        digitalWrite(pins.in1, LOW);
-        analogWrite(pins.in2, duty);
+        ledcAnalogWrite(config.fwdChannel, 0.0f);
+        ledcAnalogWrite(config.backChannel, -config.desiredSpeed);
     }
     else
     {
-        digitalWrite(pins.in1, LOW);
-        digitalWrite(pins.in2, LOW);
+        stop(motor);
     }
 }
 
+// Apply the latest motor command
+void Motor::updateSignal(MotorId motor)
+{
+    setPWM(motor);
+}
+
+// Forward at full power
 void Motor::forward(MotorId motor)
 {
-    MotorPins pins = getPins(motor);
-
-    digitalWrite(pins.in1, HIGH);
-    digitalWrite(pins.in2, LOW);
+    setSpeed(motor, 1.0f);
+    updateSignal(motor);
 }
 
+// Backward at full power
 void Motor::backward(MotorId motor)
 {
-    MotorPins pins = getPins(motor);
-
-    digitalWrite(pins.in1, LOW);
-    digitalWrite(pins.in2, HIGH);
+    setSpeed(motor, -1.0f);
+    updateSignal(motor);
 }
 
+
+// Stop motor
 void Motor::stop(MotorId motor)
 {
-    MotorPins pins = getPins(motor);
+    MotorConfig& config = getMotor(motor);
 
-    digitalWrite(pins.in1, LOW);
-    digitalWrite(pins.in2, LOW);
+    config.desiredSpeed = 0.0f;
+
+    ledcWrite(config.fwdChannel, 0);
+    ledcWrite(config.backChannel, 0);
 }
