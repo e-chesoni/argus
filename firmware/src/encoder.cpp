@@ -19,8 +19,8 @@ namespace
 
     // TODO: Replace with your actual encoder GPIO pins.
     // These are EXAMPLE assignments only.
-    constexpr EncoderPins frontLeftPins  = {15, 6};
-    constexpr EncoderPins frontRightPins = {10, 9};
+    constexpr EncoderPins frontLeftPins  = {6, 15};
+    constexpr EncoderPins frontRightPins = {9, 10};
     constexpr EncoderPins rearLeftPins   = {12, 11};
     constexpr EncoderPins rearRightPins  = {14, 13};
 
