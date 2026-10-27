@@ -4,6 +4,7 @@
 
 namespace
 {
+    // Make sure these match the schematic (if you change them)
     constexpr int xPin = 4;
     constexpr int yPin = 5;
     

@@ -4,7 +4,7 @@
 
 namespace OnboardLed
 {
-    // Standard colors
+    // define standard colors
     constexpr uint32_t off    = 0x000000;
     constexpr uint32_t red    = 0xFF0000;
     constexpr uint32_t green  = 0x00FF00;

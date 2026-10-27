@@ -19,9 +19,7 @@ void setup()
     
     // Init relevant hardware
     OnboardLed::setup();
-    //ExternalLed::setup();
     Joystick::setup();
-    //Motor::setup();
     Drive::setup();
     Encoder::setup();
 
@@ -34,6 +32,12 @@ void loop()
 {
     float x = Joystick::getNormalizedX();
     float y = Joystick::getNormalizedY();
+    
+    Serial.print("X: ");
+    Serial.print(x);
+
+    Serial.print("\tY: ");
+    Serial.println(y);
 
     // Read encoders
     Serial.print("FL: ");
@@ -48,14 +52,7 @@ void loop()
     Serial.print("\tRR: ");
     Serial.println(Encoder::getCount(Motor::MotorId::rearRight));
 
-    // If this works, you dont need specific strafe, diagonal, etc. cmds in drive files
     Drive::move(x, y);
-
-    Serial.print("X: ");
-    Serial.print(x);
-
-    Serial.print("\tY: ");
-    Serial.println(y);
 
     delay(50);
 }

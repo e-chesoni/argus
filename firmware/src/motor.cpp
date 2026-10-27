@@ -22,6 +22,7 @@ namespace
         float desiredSpeed;
     };
 
+    // Make sure these match the schematic (if you change them)
     MotorConfig motors[] =
     {
         {41, 40, 0, 1, DEFAULT_FREQ, 0.0f}, // Front-left

@@ -17,8 +17,7 @@ namespace
         uint8_t previousState = 0;
     };
 
-    // TODO: Replace with your actual encoder GPIO pins.
-    // These are EXAMPLE assignments only.
+    // Make sure these match the schematic (if you change them)
     constexpr EncoderPins frontLeftPins  = {6, 15};
     constexpr EncoderPins frontRightPins = {9, 10};
     constexpr EncoderPins rearLeftPins   = {12, 11};
@@ -29,7 +28,7 @@ namespace
     EncoderState rearLeftState;
     EncoderState rearRightState;
 
-    // Protect shared encoder state between ISR and main loop.
+    // Protect shared encoder state between ISR and main loop
     portMUX_TYPE encoderMux = portMUX_INITIALIZER_UNLOCKED;
 
     EncoderState* getState(Motor::MotorId motor)
@@ -93,7 +92,7 @@ namespace
         portEXIT_CRITICAL_ISR(&encoderMux);
     }
 
-    // Each interrupt callback identifies its own encoder.
+    // Each interrupt callback should identify its own encoder
     void ARDUINO_ISR_ATTR frontLeftISR()
     {
         handleTransition(&frontLeftState, frontLeftPins);
