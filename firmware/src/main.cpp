@@ -8,6 +8,8 @@
 #include "../include/encoder.hpp"
 
 constexpr int externalLedPin = 2;
+constexpr int xPin = 4;
+constexpr int yPin = 5;
 
 void setup()
 {
@@ -20,24 +22,23 @@ void setup()
     // Init relevant hardware
     OnboardLed::setup();
     Joystick::setup();
+
     Drive::setup();
     Encoder::setup();
 
     // Set the onboard LED to purple once at startup
     Serial.println("Setting onboard LED to purple");
     OnboardLed::setColor(OnboardLed::purple);
+
+    Serial.begin(115200);
+    delay(2000);
+    analogReadResolution(12);
 }
 
 void loop()
 {
     float x = Joystick::getNormalizedX();
     float y = Joystick::getNormalizedY();
-    
-    Serial.print("X: ");
-    Serial.print(x);
-
-    Serial.print("\tY: ");
-    Serial.println(y);
 
     // Read encoders
     Serial.print("FL: ");
@@ -54,5 +55,24 @@ void loop()
 
     Drive::move(x, y);
 
-    delay(50);
+    // Serial.print("X: ");
+    // Serial.print(x);
+
+    // Serial.print("\tY: ");
+    // Serial.println(y);
+
+    //int rawX = analogRead(xPin);;
+    //int rawY = analogRead(yPin);;
+
+    int rawX = Joystick::getX();;
+    int rawY = Joystick::getY();;
+
+    Serial.printf(
+        "GPIO4: %d, normalized x: %.2f | GPIO5: %d, normalized y: %.2f\n",
+        rawX, x, rawY, y
+    );
+
+    delay(200);
+
+    //delay(50);
 }

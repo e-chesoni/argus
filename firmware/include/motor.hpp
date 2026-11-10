@@ -2,12 +2,13 @@
 
 namespace Motor
 {
+    // NOTE: order here must match MotorConfig in motor.cpp
     enum class MotorId
     {
-        frontLeft,
-        frontRight,
-        rearLeft,
-        rearRight
+        rearRight = 0,
+        frontRight = 1,
+        frontLeft = 2,
+        rearLeft = 3
     };
 
     void setup();

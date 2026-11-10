@@ -34,7 +34,7 @@ void Drive::move(float x, float y)
     Motor::setSpeed(Id::frontLeft, frontLeft);
     Motor::setSpeed(Id::frontRight, frontRight);
     Motor::setSpeed(Id::rearLeft, rearLeft);
-    Motor::setSpeed(Id::rearRight, rearRight);
+    Motor::setSpeed(Id::rearRight, rearRight); // 0 
 
     // Apply PWM signals to motors
     Motor::updateSignal(Id::frontLeft);
