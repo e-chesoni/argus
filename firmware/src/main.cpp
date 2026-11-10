@@ -8,8 +8,6 @@
 #include "../include/encoder.hpp"
 
 constexpr int externalLedPin = 2;
-constexpr int xPin = 4;
-constexpr int yPin = 5;
 
 void setup()
 {
@@ -54,15 +52,6 @@ void loop()
     Serial.println(Encoder::getCount(Motor::MotorId::rearRight));
 
     Drive::move(x, y);
-
-    // Serial.print("X: ");
-    // Serial.print(x);
-
-    // Serial.print("\tY: ");
-    // Serial.println(y);
-
-    //int rawX = analogRead(xPin);;
-    //int rawY = analogRead(yPin);;
 
     int rawX = Joystick::getX();;
     int rawY = Joystick::getY();;
