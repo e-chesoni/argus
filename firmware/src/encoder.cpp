@@ -18,7 +18,7 @@ namespace
     };
 
     // Make sure these match the schematic (if you change them)
-    constexpr EncoderPins frontLeftPins  = {15, 6};
+    constexpr EncoderPins frontLeftPins  = {6, 15};
     constexpr EncoderPins frontRightPins = {10, 9};
     constexpr EncoderPins rearLeftPins   = {11, 12};
     constexpr EncoderPins rearRightPins  = {13, 14}; // 0 

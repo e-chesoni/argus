@@ -61,7 +61,5 @@ void loop()
         rawX, x, rawY, y
     );
 
-    delay(200);
-
-    //delay(50);
+    delay(200); // 50 might work here too
 }
