@@ -23,13 +23,13 @@ namespace
     };
 
     // NOTE: Make sure pin assignments match the schematic
-    // NOTE: Order of pin assignments must match order in which motors are assigned ids in motor.hpp
+    // NOTE: Order must match MotorId in motor.hpp
     MotorConfig motors[] =
     {
         {8, 18, 0, 1, DEFAULT_FREQ, 0.0f}, // Rear-right
         {17, 16, 2, 3, DEFAULT_FREQ, 0.0f}, // Front-right
-        {37, 38, 4, 5, DEFAULT_FREQ, 0.0f}, // Front-left
-        {41, 40, 6, 7, DEFAULT_FREQ, 0.0f}  // Rear-left
+        {38, 37, 4, 5, DEFAULT_FREQ, 0.0f}, // Front-left
+        {40, 41, 6, 7, DEFAULT_FREQ, 0.0f}  // Rear-left
     };
 
     MotorConfig& getMotor(Motor::MotorId motor)
@@ -136,13 +136,11 @@ void Motor::forward(MotorId motor)
     updateSignal(motor);
 }
 
-// Backward at full power
 void Motor::backward(MotorId motor)
 {
     setSpeed(motor, -1.0f);
     updateSignal(motor);
 }
-
 
 // Stop motor
 void Motor::stop(MotorId motor)

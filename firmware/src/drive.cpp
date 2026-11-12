@@ -11,10 +11,9 @@ void Drive::setup()
     Motor::setup();
 }
 
-// TODO: test both move and specific motion cmds (then delete one--you don't need both)
-
 void Drive::move(float x, float y)
 {
+    // Calculate wheel speeds
     float frontLeft  = y + x;
     float frontRight = y - x;
     float rearLeft   = y - x;
@@ -22,8 +21,7 @@ void Drive::move(float x, float y)
 
     // Normalize so no wheel exceeds 100% command
     float maxSpeed = max(1.0f, max(abs(frontLeft),
-                     max(abs(frontRight),
-                     max(abs(rearLeft), abs(rearRight)))));
+                     max(abs(frontRight), max(abs(rearLeft), abs(rearRight)))));
 
     frontLeft  /= maxSpeed;
     frontRight /= maxSpeed;
@@ -34,7 +32,7 @@ void Drive::move(float x, float y)
     Motor::setSpeed(Id::frontLeft, frontLeft);
     Motor::setSpeed(Id::frontRight, frontRight);
     Motor::setSpeed(Id::rearLeft, rearLeft);
-    Motor::setSpeed(Id::rearRight, rearRight); // 0 
+    Motor::setSpeed(Id::rearRight, rearRight);
 
     // Apply PWM signals to motors
     Motor::updateSignal(Id::frontLeft);

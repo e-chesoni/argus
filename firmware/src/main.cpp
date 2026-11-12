@@ -35,31 +35,33 @@ void setup()
 
 void loop()
 {
+    int rawX = Joystick::getX();;
+    int rawY = Joystick::getY();;
+
     float x = Joystick::getNormalizedX();
     float y = Joystick::getNormalizedY();
 
     // Read encoders
-    Serial.print("FL: ");
-    Serial.print(Encoder::getCount(Motor::MotorId::frontLeft));
+    // Serial.print("FL: ");
+    // Serial.print(Encoder::getCount(Motor::MotorId::frontLeft));
 
-    Serial.print("\tFR: ");
-    Serial.print(Encoder::getCount(Motor::MotorId::frontRight));
+    // Serial.print("\tFR: ");
+    // Serial.print(Encoder::getCount(Motor::MotorId::frontRight));
 
-    Serial.print("\tRL: ");
-    Serial.print(Encoder::getCount(Motor::MotorId::rearLeft));
+    // Serial.print("\tRL: ");
+    // Serial.print(Encoder::getCount(Motor::MotorId::rearLeft));
 
-    Serial.print("\tRR: ");
-    Serial.println(Encoder::getCount(Motor::MotorId::rearRight));
+    // Serial.print("\tRR: ");
+    // Serial.println(Encoder::getCount(Motor::MotorId::rearRight));
+    
 
     Drive::move(x, y);
 
-    int rawX = Joystick::getX();;
-    int rawY = Joystick::getY();;
+    // Serial.printf(
+    //     "GPIO4: %d, normalized x: %.2f | GPIO5: %d, normalized y: %.2f\n",
+    //     rawX, x, rawY, y
+    // );
 
-    Serial.printf(
-        "GPIO4: %d, normalized x: %.2f | GPIO5: %d, normalized y: %.2f\n",
-        rawX, x, rawY, y
-    );
 
-    delay(200); // 50 might work here too
+    delay(50); // 200 or 50
 }

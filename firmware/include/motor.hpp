@@ -13,15 +13,15 @@ namespace Motor
 
     void setup();
 
-    // configure motor
+    // Configure motor
     void setFreq(MotorId motor, unsigned int freq);
     void setSpeed(MotorId motor, float speed);
 
-    // use to apply motor commands
+    // Apply motor commands
     void setPWM(MotorId motor);
     void updateSignal(MotorId motor);
 
-    // basic motor commands
+    // Basic motor commands
     void forward(MotorId motor);
     void backward(MotorId motor);
     void stop(MotorId motor);
